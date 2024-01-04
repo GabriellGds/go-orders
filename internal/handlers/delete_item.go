@@ -13,7 +13,7 @@ import (
 func (h *handler) DeleteItem(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("delete item")
 	logger.Info("start delete item")
-
+	ctx := r.Context()
 	itemID := chi.URLParam(r, "itemID")
 
 	ID, err := strconv.Atoi(itemID)
@@ -23,7 +23,7 @@ func (h *handler) DeleteItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.service.DeleteItemService(ID); err != nil {
+	if err := h.service.DeleteItemService(ctx, ID); err != nil {
 		response.SendJSON(w, err.Code, err)
 		return
 	}

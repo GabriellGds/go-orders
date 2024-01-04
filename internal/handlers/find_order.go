@@ -13,6 +13,7 @@ import (
 func (h *handler) FindOrder(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("find order")
 	logger.Info("start find order")
+	ctx := r.Context()
 
 	itemID := chi.URLParam(r, "orderID")
 	ID, err := strconv.Atoi(itemID)
@@ -22,7 +23,7 @@ func (h *handler) FindOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	order, err := h.service.FindOrderService(ID)
+	order, err := h.service.FindOrderService(ctx, ID)
 	if err != nil {
 		response.SendJSON(w, http.StatusNotFound, err)
 		return

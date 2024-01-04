@@ -13,6 +13,7 @@ import (
 func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("login")
 	logger.Info("start login")
+	ctx := r.Context()
 
 	var u models.UserLogin
 	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
@@ -30,7 +31,7 @@ func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := models.ConvertLoginToUser(u.Email, u.Password)
-	user, token, err := h.service.Login(user)
+	user, token, err := h.service.Login(ctx, user)
 	if err != nil {
 		response.SendJSON(w, err.Code, err)
 		return

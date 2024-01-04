@@ -13,6 +13,7 @@ import (
 func (h *handler) FindItem(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("find item")
 	logger.Info("start find item")
+	ctx := r.Context()
 
 	itemID := chi.URLParam(r, "itemID")
 
@@ -23,7 +24,7 @@ func (h *handler) FindItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	item, err := h.service.FindItemService(ID)
+	item, err := h.service.FindItemService(ctx, ID)
 	if err != nil {
 		response.SendJSON(w, http.StatusBadRequest, err)
 		return

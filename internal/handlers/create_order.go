@@ -13,6 +13,8 @@ import (
 func (h *handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("createOrder")
 	logger.Info("start create order")
+	ctx := r.Context()
+
 	tokenID, err := models.GetUserIDFromToken(r)
 	if err != nil {
 		logger.Error("invalid token", err)
@@ -44,7 +46,7 @@ func (h *handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	}
 	order := models.NewOrder(tokenID, orderRequest.Items)
 
-	orderResult, er := h.service.CreateOrderService(order)
+	orderResult, er := h.service.CreateOrderService(ctx, order)
 	if er != nil {
 		response.SendJSON(w, er.Code, err)
 		return

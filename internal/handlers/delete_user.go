@@ -14,6 +14,8 @@ import (
 func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("delete user")
 	logger.Info("start delete user")
+	ctx := r.Context()
+	
 	tokenID, err := models.GetUserIDFromToken(r)
 	if err != nil {
 		logger.Error("invalid token")
@@ -42,7 +44,7 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.service.DeleteUserService(userID); err != nil {
+	if err := h.service.DeleteUserService(ctx, userID); err != nil {
 		response.SendJSON(w, err.Code, err)
 		return
 	}

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/GabriellGds/go-orders/internal/models"
@@ -8,22 +9,22 @@ import (
 	"github.com/GabriellGds/go-orders/pkg/logger"
 )
 
-func (s *service) CreateUserService(user *models.User) (*models.User, *errors.ErrorResponse) {
-	_, err := s.repository.FindUserByEmailRepository(user.Email)
+func (s *service) CreateUserService(ctx context.Context, user *models.User) (*models.User, *errors.ErrorResponse) {
+	_, err := s.repository.FindUserByEmailRepository(ctx, user.Email)
 	if err == nil {
 		return nil, &errors.ErrorResponse{
-			Field: "email",
+			Field:   "email",
 			Message: "Email is already registered in another account",
-			Code: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
 		}
 	}
-	
+
 	user.HashPassword(user.Password)
-	id, err := s.repository.CreateUserRepository(*user)
+	id, err := s.repository.CreateUserRepository(ctx, *user)
 	if err != nil {
 		return nil, &errors.ErrorResponse{
 			Message: "error to creating user on database",
-			Code: http.StatusInternalServerError,
+			Code:    http.StatusInternalServerError,
 		}
 	}
 	user.ID = id
@@ -31,52 +32,52 @@ func (s *service) CreateUserService(user *models.User) (*models.User, *errors.Er
 	return user, nil
 }
 
-func (s *service) DeleteUserService(id int) *errors.ErrorResponse {
+func (s *service) DeleteUserService(ctx context.Context, id int) *errors.ErrorResponse {
 	logger := logger.NewLogger("deleteUser service")
 	logger.Info("delete user service")
-	if _, err := s.repository.FindUserRepository(id); err != nil {
-	logger.Error("error to find user", err)
+	if _, err := s.repository.FindUserRepository(ctx, id); err != nil {
+		logger.Error("error to find user", err)
 		return &errors.ErrorResponse{
 			Message: "user not found",
-			Code: http.StatusNotFound,
+			Code:    http.StatusNotFound,
 		}
 	}
 
-	if err := s.repository.DeleteUserRepository(id); err != nil {
+	if err := s.repository.DeleteUserRepository(ctx, id); err != nil {
 		logger.Error("error to deleting user on database", err)
 		return &errors.ErrorResponse{
 			Message: "error to deleting user",
-			Code: http.StatusInternalServerError,
+			Code:    http.StatusInternalServerError,
 		}
 	}
 
 	return nil
 }
 
-func (s *service) UpdateUserService(id int, user *models.User) *errors.ErrorResponse {
+func (s *service) UpdateUserService(ctx context.Context, id int, user *models.User) *errors.ErrorResponse {
 	logger := logger.NewLogger("updateUserService")
 	logger.Info("start updateUserService")
-	_, err := s.repository.FindUserRepository(id)
+	_, err := s.repository.FindUserRepository(ctx, id)
 	if err != nil {
 		logger.Error("error to finding user ", err)
 		return &errors.ErrorResponse{
 			Message: "user not found",
-			Code: http.StatusNotFound,
+			Code:    http.StatusNotFound,
 		}
 	}
-	if err := s.repository.UpdateUserRepository(id, user); err != nil {
+	if err := s.repository.UpdateUserRepository(ctx, id, user); err != nil {
 		logger.Error("error to updating user on database", err)
 		return &errors.ErrorResponse{
 			Message: "error to update user",
-			Code: http.StatusInternalServerError,
+			Code:    http.StatusInternalServerError,
 		}
 	}
 
 	return nil
 }
 
-func (s *service) FindUserService(id int) (models.User, error) {
-	user, err := s.repository.FindUserRepository(id)
+func (s *service) FindUserService(ctx context.Context, id int) (models.User, error) {
+	user, err := s.repository.FindUserRepository(ctx, id)
 	if err != nil {
 		return models.User{}, &errors.ErrorResponse{
 			Message: "user not found",
@@ -86,15 +87,15 @@ func (s *service) FindUserService(id int) (models.User, error) {
 	return user, nil
 }
 
-func(s *service) Login(user *models.User) (*models.User, string, *errors.ErrorResponse) {
+func (s *service) Login(ctx context.Context, user *models.User) (*models.User, string, *errors.ErrorResponse) {
 	logger := logger.NewLogger("login service")
 	logger.Error("start login service")
-	u, err := s.repository.FindUserByEmailRepository(user.Email)
+	u, err := s.repository.FindUserByEmailRepository(ctx, user.Email)
 	if err != nil {
 		logger.Error("error to finding email on database", err)
 		return nil, "", &errors.ErrorResponse{
 			Message: "invalid email",
-			Code: http.StatusNotFound,
+			Code:    http.StatusNotFound,
 		}
 	}
 
@@ -103,7 +104,7 @@ func(s *service) Login(user *models.User) (*models.User, string, *errors.ErrorRe
 		logger.Error("invalid password", err)
 		return nil, "", &errors.ErrorResponse{
 			Message: "invalid password",
-			Code: http.StatusUnauthorized,
+			Code:    http.StatusUnauthorized,
 		}
 	}
 

@@ -13,7 +13,7 @@ import (
 func (h *handler) CreateItem(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("create item")
 	logger.Info("start create item")
-
+	ctx := r.Context()
 	var i models.ItemRequest
 	if err := json.NewDecoder(r.Body).Decode(&i); err != nil {
 		logger.Error("error unmarshal item", err)
@@ -30,7 +30,7 @@ func (h *handler) CreateItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	item := models.NewItem(i.Name, i.Price)
-	itemResult, err := h.service.CreateItemService(item)
+	itemResult, err := h.service.CreateItemService(ctx ,item)
 	if err != nil {
 		logger.Error("error to create item", err)
 		response.SendJSON(w, err.Code, err)

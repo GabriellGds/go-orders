@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+
 	"github.com/GabriellGds/go-orders/internal/models"
 	"github.com/GabriellGds/go-orders/internal/repository"
 	"github.com/GabriellGds/go-orders/pkg/errors"
@@ -11,21 +13,21 @@ type service struct {
 }
 
 type Service interface {
-	CreateUserService(*models.User) (*models.User, *errors.ErrorResponse)
-	DeleteUserService(int) *errors.ErrorResponse
-	UpdateUserService(int, *models.User) *errors.ErrorResponse
-	FindUserService(int)(models.User, error)
-	Login(*models.User) (*models.User, string, *errors.ErrorResponse)
+	CreateUserService(context.Context, *models.User) (*models.User, *errors.ErrorResponse)
+	DeleteUserService(context.Context, int) *errors.ErrorResponse
+	UpdateUserService(context.Context, int, *models.User) *errors.ErrorResponse
+	FindUserService(context.Context, int)(models.User, error)
+	Login(context.Context, *models.User) (*models.User, string, *errors.ErrorResponse)
 
-	CreateOrderService(*models.Order) (*models.Order, *errors.ErrorResponse)
-	DeleteOrderService(userID, id int) *errors.ErrorResponse
-	FindOrderService(int) (models.Order, error)
+	CreateOrderService(context.Context, *models.Order) (*models.Order, *errors.ErrorResponse)
+	DeleteOrderService(ctx context.Context, userID, id int) *errors.ErrorResponse
+	FindOrderService(context.Context, int) (models.Order, error)
 
-	CreateItemService(*models.Item) (*models.Item, *errors.ErrorResponse)
-	DeleteItemService(int) *errors.ErrorResponse
-	UpdateItemSvice(int, *models.Item) *errors.ErrorResponse
-	FindItemService(id int)(models.Item, error)
-	ListItems() ([]models.Item, *errors.ErrorResponse)
+	CreateItemService(context.Context, *models.Item) (*models.Item, *errors.ErrorResponse)
+	DeleteItemService(context.Context, int) *errors.ErrorResponse
+	UpdateItemSvice(context.Context, int, *models.Item) *errors.ErrorResponse
+	FindItemService(context.Context, int)(models.Item, error)
+	ListItems(ctx context.Context) ([]models.Item, *errors.ErrorResponse)
 }
 
 func NewUserService(repository repository.RepositoryInterface) Service {

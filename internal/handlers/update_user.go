@@ -15,6 +15,7 @@ import (
 func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("find user")
 	logger.Info("start find user")
+	ctx := r.Context()
 
 	tokenID, err := models.GetUserIDFromToken(r)
 	if err != nil {
@@ -60,7 +61,7 @@ func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := models.ConvertUpdateUserToUser(u.Name)
-	if err := h.service.UpdateUserService(userID, user); err != nil {
+	if err := h.service.UpdateUserService(ctx, userID, user); err != nil {
 		response.SendJSON(w, err.Code, err)
 		return
 	}

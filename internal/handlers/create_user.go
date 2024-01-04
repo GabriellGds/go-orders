@@ -13,6 +13,7 @@ import (
 func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("create user handler")
 	logger.Info("start create user handler")
+	ctx := r.Context()
 
 	var userRequest models.UserRequest
 	if err := json.NewDecoder(r.Body).Decode(&userRequest); err != nil {
@@ -30,7 +31,7 @@ func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	u := models.NewUser(userRequest.Name, userRequest.Password, userRequest.Email)
-	user, err := h.service.CreateUserService(u)
+	user, err := h.service.CreateUserService(ctx, u)
 	if err != nil {
 		response.SendJSON(w, err.Code, err)
 		return

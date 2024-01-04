@@ -14,6 +14,7 @@ import (
 func (h *handler) FindUser(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("findUser")
 	logger.Info("start findUser")
+	ctx := r.Context()
 
 	param := chi.URLParam(r, "userID")
 	userID, err := strconv.Atoi(param)
@@ -25,7 +26,7 @@ func (h *handler) FindUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.service.FindUserService(userID)
+	user, err := h.service.FindUserService(ctx, userID)
 	if err != nil {
 		response.SendJSON(w, http.StatusNotFound, err)
 		return

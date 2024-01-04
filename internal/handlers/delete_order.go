@@ -14,7 +14,7 @@ import (
 func (h *handler) DeleteOrder(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("delete order")
 	logger.Info("start delete order")
-
+	ctx := r.Context()
 	tokenID, err := models.GetUserIDFromToken(r)
 	if err != nil {
 		logger.Error("invalid token")
@@ -23,7 +23,7 @@ func (h *handler) DeleteOrder(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	logger.Info(tokenID)
+	
 	id := chi.URLParam(r, "orderID")
 	orderID, err := strconv.Atoi(id)
 	if err != nil {
@@ -32,7 +32,7 @@ func (h *handler) DeleteOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.service.DeleteOrderService(tokenID, orderID); err != nil {
+	if err := h.service.DeleteOrderService(ctx, tokenID, orderID); err != nil {
 		response.SendJSON(w, err.Code, err)
 		return
 	}

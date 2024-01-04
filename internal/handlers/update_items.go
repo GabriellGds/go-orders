@@ -15,6 +15,7 @@ import (
 func (h *handler) UpdateItem(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("update item")
 	logger.Info("start update item")
+	ctx := r.Context()
 
 	userID := chi.URLParam(r, "itemID")
 
@@ -42,7 +43,7 @@ func (h *handler) UpdateItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	item := models.NewItem(i.Name, i.Price)
-	error := h.service.UpdateItemSvice(ID, item)
+	error := h.service.UpdateItemSvice(ctx, ID, item)
 	if err != nil {
 		response.SendJSON(w, error.Code, err)
 		return
