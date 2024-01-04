@@ -5,24 +5,19 @@ import (
 	"net/http"
 
 	"github.com/GabriellGds/go-orders/internal/models"
-	"github.com/GabriellGds/go-orders/internal/repository"
+	"github.com/GabriellGds/go-orders/pkg/errors"
 	"github.com/GabriellGds/go-orders/pkg/logger"
 	"github.com/GabriellGds/go-orders/pkg/response"
-	"github.com/jmoiron/sqlx"
 )
 
-type Handler struct {
-	DB *sqlx.DB
-}
-
-func (h *Handler) CreateItem(w http.ResponseWriter, r *http.Request) {
+func (h *handler) CreateItem(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("create item")
 	logger.Info("start create item")
 
 	var i models.ItemRequest
 	if err := json.NewDecoder(r.Body).Decode(&i); err != nil {
 		logger.Error("error unmarshal item", err)
-		response.SendJSON(w, http.StatusBadRequest, models.ErrorResponse{
+		response.SendJSON(w, http.StatusBadRequest, errors.ErrorResponse{
 			Message: "invalid type",
 		})
 		return
@@ -35,17 +30,14 @@ func (h *Handler) CreateItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	item := models.NewItem(i.Name, i.Price)
-	repo := repository.NewItemRepository(h.DB)
-	itemResponse, err := repo.CreateItem(*item)
+	itemResult, err := h.service.CreateItemService(item)
 	if err != nil {
-		logger.Error("error create item on database", err)
-		response.SendJSON(w, http.StatusInternalServerError, models.ErrorResponse{
-			Message: "error creating user on database ",
-		})
+		logger.Error("error to create item", err)
+		response.SendJSON(w, err.Code, err)
 		return
 	}
 
 	logger.Info("item created successfully")
 
-	response.SendJSON(w, http.StatusCreated, itemResponse)
+	response.SendJSON(w, http.StatusCreated, itemResult)
 }

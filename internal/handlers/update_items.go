@@ -6,14 +6,13 @@ import (
 	"strconv"
 
 	"github.com/GabriellGds/go-orders/internal/models"
-	"github.com/GabriellGds/go-orders/internal/repository"
+	"github.com/GabriellGds/go-orders/pkg/errors"
 	"github.com/GabriellGds/go-orders/pkg/logger"
 	"github.com/GabriellGds/go-orders/pkg/response"
 	"github.com/go-chi/chi/v5"
 )
 
-
-func (h *Handler) UpdateItem(w http.ResponseWriter, r *http.Request) {
+func (h *handler) UpdateItem(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("update item")
 	logger.Info("start update item")
 
@@ -26,38 +25,26 @@ func (h *Handler) UpdateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var item models.ItemRequest
-	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
+	var i models.ItemRequest
+	if err := json.NewDecoder(r.Body).Decode(&i); err != nil {
 		logger.Error("error to unmarshal item", err)
-		response.SendJSON(w, http.StatusBadRequest, models.ErrorResponse{
+		response.SendJSON(w, http.StatusBadRequest, errors.ErrorResponse{
 			Message: "invalid type",
 		})
 		return
 	}
 
-	err = item.Validate()
+	err = i.Validate()
 	if err != nil {
-		logger.Error("error trying to validate item", err)
+		logger.Error("error to validate item", err)
 		response.SendJSON(w, http.StatusBadRequest, err)
 		return
 	}
 
-	repo := repository.NewItemRepository(h.DB)
-	_, err = repo.FindItem(ID)
+	item := models.NewItem(i.Name, i.Price)
+	error := h.service.UpdateItemSvice(ID, item)
 	if err != nil {
-		logger.Error("error to find item on database", err)
-		response.SendJSON(w, http.StatusNotFound, models.ErrorResponse{
-			Message: "item not found",
-		})
-		return
-	}
-
-	err = repo.UpdateItem(ID, item)
-	if err != nil {
-		logger.Error("error to update item on database", err)
-		response.SendJSON(w, http.StatusInternalServerError, models.ErrorResponse{
-			Message: "error to updating item on database",
-		})
+		response.SendJSON(w, error.Code, err)
 		return
 	}
 
