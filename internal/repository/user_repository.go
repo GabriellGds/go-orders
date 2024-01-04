@@ -2,37 +2,26 @@ package repository
 
 import (
 	"github.com/GabriellGds/go-orders/internal/models"
-	"github.com/jmoiron/sqlx"
 )
 
-type userRepository struct {
-	db *sqlx.DB
-}
-
-func NewUserRepository(db *sqlx.DB) UserRepositoryInterface {
-	return &userRepository{db: db}
-}
-
-func (ur userRepository) CreateUser(user models.User) (models.User, error) {
-	stmt, err := ur.db.Preparex(`INSERT INTO users (name, email, password) VALUES($1, $2, $3) RETURNING id`)
+func (r repository) CreateUserRepository(user models.User) (int, error) {
+	stmt, err := r.db.Preparex(`INSERT INTO users (name, email, password) VALUES($1, $2, $3) RETURNING id`)
 	if err != nil {
-		return models.User{}, err
+		return 0, err
 	}
 	defer stmt.Close()
 
-	var lastInsertID int
-	err = stmt.QueryRow(user.Name, user.Email, user.Password).Scan(&lastInsertID)
+	var id int
+	err = stmt.QueryRow(user.Name, user.Email, user.Password).Scan(&id)
 	if err != nil {
-		return models.User{}, err
+		return 0, err
 	}
 
-	user.ID = lastInsertID
-
-	return user, nil
+	return id, nil
 }
 
-func (ur userRepository) UpdateUser(id int, user models.UserUpdateRequest) error {
-	stmt, err := ur.db.Preparex(`UPDATE users SET name = $1 where id = $2 AND deleted_at IS NULL`)
+func (r repository) UpdateUserRepository(id int, user *models.User) error {
+	stmt, err := r.db.Preparex(`UPDATE users SET name = $1 where id = $2 AND deleted_at IS NULL`)
 	if err != nil {
 		return err
 	}
@@ -45,8 +34,8 @@ func (ur userRepository) UpdateUser(id int, user models.UserUpdateRequest) error
 	return nil
 }
 
-func (ur userRepository) DeleteUser(id int) error {
-	stmt, err := ur.db.Preparex(`UPDATE users SET deleted_at = NOW() WHERE id = $1 AND deleted_at IS NULL`)
+func (r repository) DeleteUserRepository(id int) error {
+	stmt, err := r.db.Preparex(`UPDATE users SET deleted_at = NOW() WHERE id = $1 AND deleted_at IS NULL`)
 	if err != nil {
 		return err
 	}
@@ -59,8 +48,8 @@ func (ur userRepository) DeleteUser(id int) error {
 	return nil
 }
 
-func (ur userRepository) User(id int) (models.User, error) {
-	stmt, err := ur.db.Preparex(`SELECT * FROM users WHERE id = $1 AND deleted_at IS NULL`)
+func (r repository) FindUserRepository(id int) (models.User, error) {
+	stmt, err := r.db.Preparex(`SELECT * FROM users WHERE id = $1 AND deleted_at IS NULL`)
 	if err != nil {
 		return models.User{}, err
 	}
@@ -74,8 +63,8 @@ func (ur userRepository) User(id int) (models.User, error) {
 	return user, nil
 }
 
-func (ur userRepository) FindEmail(email string) (*models.User, error) {
-	stmt, err := ur.db.Preparex("SELECT * FROM users WHERE email = $1 AND deleted_at IS NULL")
+func (r repository) FindUserByEmailRepository(email string) (*models.User, error) {
+	stmt, err := r.db.Preparex("SELECT * FROM users WHERE email = $1 AND deleted_at IS NULL")
 	if err != nil {
 		return nil, err
 	}
