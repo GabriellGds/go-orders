@@ -25,14 +25,14 @@ type UserResponse struct {
 	DeletedAt *time.Time `json:"deleted_at"`
 }
 
-func NewUserResponse(id int, name, email string, createdAt, updatedAt time.Time, deletedAt *time.Time) *UserResponse{
+func NewUserResponse(id int, name, email string, createdAt, updatedAt time.Time) *UserResponse{
 	return &UserResponse{
 		ID: id,
 		Name: name,
 		Email: email,
 		CreatedAt: createdAt,
 		UpdatedAt: updatedAt,
-		DeletedAt: deletedAt,
+		DeletedAt: nil,
 	}
 }
 
@@ -40,7 +40,6 @@ type UserRequest struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
-	Age      int    `json:"age"`
 }
 
 type UserLogin struct {
@@ -60,6 +59,19 @@ func NewUser(name, password, email string) *User {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		DeletedAt: nil,
+	}
+}
+
+func ConvertLoginToUser(email, password string) *User{
+	return &User{
+		Email: email,
+		Password: password,
+	}
+}
+
+func ConvertUpdateUserToUser(name string) *User {
+	return &User{
+		Name: name,
 	}
 }
 

@@ -29,6 +29,10 @@ type OrderRequest struct {
 	Items []OrderItems `json:"items"`
 }
 
+type OrderCreatedResponse struct {
+	ID int `json:"id"`
+}
+
 func NewOrder(userID int, items []OrderItems) *Order {
 	return &Order{
 		UserID:    userID,

@@ -1,23 +1,23 @@
 package models
 
+import (
+	"net/http"
 
-func ItemErrorParam(field, message string) error {
-	if field == "price" {
-		return &ErrorResponse{
-			Field:   field,
-			Message: message,
-		}
-	}
+	"github.com/GabriellGds/go-orders/pkg/errors"
+)
 
-	return &ErrorResponse{
+
+func ItemErrorParam(field, message string) *errors.ErrorResponse {
+	return &errors.ErrorResponse{
 		Field:   field,
 		Message: message,
+		Code: http.StatusBadRequest,
 	}
 }
 
 func (ir *ItemRequest) Validate() error {
 	if ir.Name == "" {
-		return ItemErrorParam("name", " name (type: string) is a required")
+		return ItemErrorParam("name", " name (type: string) is required")
 	}
 
 	if ir.Price < 5.00 {

@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	errorResponse "github.com/GabriellGds/go-orders/pkg/errors"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -27,7 +28,6 @@ func (u *User) GenerateToken() (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	return tokenString, nil
 }
 
@@ -43,12 +43,12 @@ func VerifyToken(w http.ResponseWriter, r *http.Request) (User, error) {
 		return nil, errors.New("invalid token")
 	})
 	if err != nil {
-		return User{}, &ErrorResponse{Message: "invalid token"}
+		return User{}, &errorResponse.ErrorResponse{Message: "invalid token"}
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return User{}, &ErrorResponse{Message: "Invalid token"}
+		return User{}, &errorResponse.ErrorResponse{Message: "Invalid token"}
 	}
 
 	return User{
@@ -61,29 +61,29 @@ func RemoveBearerPrefix(token string) string {
 }
 
 func GetUserIDFromToken(r *http.Request) (int, error) {
-    secret := os.Getenv(JWT_SECRET)
+	secret := os.Getenv(JWT_SECRET)
 	tokenValue := RemoveBearerPrefix(r.Header.Get("Authorization"))
 
-    token, err := jwt.Parse(tokenValue, func(token *jwt.Token) (interface{}, error) {
-        if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-            return nil, errors.New("invalid token")
-        }
-        return []byte(secret), nil
-    })
-    if err != nil {
-        return 0, err
-    }
+	token, err := jwt.Parse(tokenValue, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid token")
+		}
+		return []byte(secret), nil
+	})
+	if err != nil {
+		return 0, err
+	}
 
-    claims, ok := token.Claims.(jwt.MapClaims)
-    if !ok || !token.Valid {
-        return 0, &ErrorResponse{Message: "invalid token or claims"}
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return 0, &errorResponse.ErrorResponse{Message: "invalid token or claims"}
 
-    }
+	}
 
-    userID, ok := claims["userID"].(float64)
-    if !ok {
-        return 0, &ErrorResponse{Message: "invalid token or claims"}
-    }
+	userID, ok := claims["userID"].(float64)
+	if !ok {
+		return 0, &errorResponse.ErrorResponse{Message: "invalid token or claims"}
+	}
 
-    return int(userID), nil
+	return int(userID), nil
 }

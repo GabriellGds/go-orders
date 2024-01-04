@@ -2,34 +2,29 @@ package models
 
 import (
 	"fmt"
+	"net/http"
 
+	"github.com/GabriellGds/go-orders/pkg/errors"
 	"github.com/badoux/checkmail"
 )
 
-func UserErrorParam(field, message string) error {
-	if field == "password" {
-		return &ErrorResponse{
-			Field:   field,
-			Message: message,
-		}
-	}
-
-	return &ErrorResponse{
+func UserErrorParam(field, message string) *errors.ErrorResponse{
+	return &errors.ErrorResponse{
 		Field:   field,
 		Message: message,
+		Code: http.StatusBadRequest,
 	}
 }
 
 func (ur *UserLogin) Validate() error {
 	if ur.Email == "" {
-		return UserErrorParam("email", "email (type string) is required")
+		return UserErrorParam("email", "email (type: string) is required")
 	}
 	if ur.Email == "" {
-		return UserErrorParam("email", "email (type string) is required")
+		return UserErrorParam("email", "email (type: string) is required")
 	}
 	if len(ur.Password) < 8 {
-		return UserErrorParam("password", "the password must have at least 8 characters")
-
+		return UserErrorParam("password", "password(type: string) the password must have at least 8 characters")
 	}
 	return nil
 }
@@ -49,7 +44,7 @@ func (ur *UserRequest) Validate() error {
 	}
 
 	if len(ur.Password) < 8 {
-		return UserErrorParam("password", "the password must have at least 8 characters")
+		return UserErrorParam("password", "password (type: string) the password must have at least 8 characters")
 
 	}
 	return nil

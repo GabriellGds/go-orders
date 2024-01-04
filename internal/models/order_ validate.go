@@ -1,9 +1,16 @@
 package models
 
-func OrderErrorParam(field, message string) error {
-	return &ErrorResponse{
+import (
+	"net/http"
+
+	"github.com/GabriellGds/go-orders/pkg/errors"
+)
+
+func OrderErrorParam(field, message string) *errors.ErrorResponse {
+	return &errors.ErrorResponse{
 		Field:   field,
 		Message: message,
+		Code: http.StatusBadRequest,
 	}
 }
 
@@ -18,7 +25,7 @@ func(oi *OrderItems) Validate() error {
 	return nil
 }
 
-func (or *OrderRequest) Validate() error {
+func (or *OrderRequest) Validate() *errors.ErrorResponse {
 	if len(or.Items) == 0 {
         return OrderErrorParam("items", "items cannot be empty")
     }
