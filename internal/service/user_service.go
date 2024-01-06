@@ -118,3 +118,19 @@ func (s *service) Login(ctx context.Context, user *models.User) (*models.User, s
 
 	return u, token, nil
 }
+
+func (s *service) ListUsers(ctx context.Context) ([]models.User, *errors.ErrorResponse) {
+	logger:= logger.NewLogger("listUser service")
+	logger.Info("start listUser service")
+
+	users, err := s.repository.ListUserRepository(ctx)
+	if err != nil {
+		logger.Error("error to listing users", err)
+		return nil, &errors.ErrorResponse{
+			Message: "error to listing users",
+			Code: http.StatusInternalServerError,
+		}
+	}
+
+	return users, nil
+}

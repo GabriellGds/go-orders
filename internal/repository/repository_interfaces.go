@@ -19,6 +19,7 @@ type RepositoryInterface interface {
 	DeleteUserRepository(ctx context.Context, id int) error
 	FindUserRepository(ctx context.Context, id int) (models.User, error)
 	FindUserByEmailRepository(ctx context.Context, email string) (*models.User, error)
+	ListUserRepository(ctx context.Context) ([]models.User, error)
 
 	CreateOrderRepository(ctx context.Context, order *models.Order) (int, error)
 	DeleteOrderRepository(ctx context.Context, orderID int) error

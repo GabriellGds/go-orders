@@ -18,6 +18,7 @@ type Service interface {
 	UpdateUserService(context.Context, int, *models.User) *errors.ErrorResponse
 	FindUserService(context.Context, int)(models.User, error)
 	Login(context.Context, *models.User) (*models.User, string, *errors.ErrorResponse)
+	ListUsers(ctx context.Context) ([]models.User, *errors.ErrorResponse)
 
 	CreateOrderService(context.Context, *models.Order) (*models.Order, *errors.ErrorResponse)
 	DeleteOrderService(ctx context.Context, userID, id int) *errors.ErrorResponse

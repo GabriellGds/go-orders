@@ -79,3 +79,18 @@ func (r repository) FindUserByEmailRepository(ctx context.Context, email string)
 
 	return &user, nil
 }
+
+func (r repository) ListUserRepository(ctx context.Context) ([]models.User, error) {
+	stmt, err := r.db.PreparexContext(ctx, `SELECT * FROM users WHERE deleted_at IS NULL`)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	var users []models.User
+	if err := stmt.SelectContext(ctx, &users); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}

@@ -14,6 +14,7 @@ func InitRoutes(mux *chi.Mux, handler handlers.HandlerInterface) {
 
 	mux.Route("/users", func(r chi.Router) {
 		r.Use(handlers.Authentication)
+		r.Get("/", handler.ListUsers)
 		r.Get("/{userID}", handler.FindUser)
 		r.Put("/{userID}", handler.UpdateUser)
 		r.Delete("/{userID}", handler.DeleteUser)

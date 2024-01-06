@@ -12,6 +12,7 @@ type HandlerInterface interface {
 	DeleteUser(w http.ResponseWriter, r *http.Request)
 	UpdateUser(w http.ResponseWriter, r *http.Request)
 	Login(w http.ResponseWriter, r *http.Request)
+	ListUsers(w http.ResponseWriter, r *http.Request)
 
 	CreateItem(w http.ResponseWriter, r *http.Request)
 	FindItem(w http.ResponseWriter, r *http.Request)
