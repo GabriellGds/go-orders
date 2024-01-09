@@ -10,6 +10,18 @@ import (
 	"github.com/GabriellGds/go-orders/pkg/response"
 )
 
+
+// CreateUser Creates a new user
+// @Summary Create user
+// @Description Create a new user 
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body models.UserRequest true "request body"
+// @Success 201 {object} models.UserResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Router /user [post]
 func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("create user handler")
 	logger.Info("start create user handler")
@@ -26,7 +38,7 @@ func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	if err := userRequest.Validate(); err != nil {
 		logger.Error("error to validate user", err)
-		response.SendJSON(w, http.StatusBadRequest, err)
+		response.SendJSON(w, err.Code, err)
 		return
 	}
 
