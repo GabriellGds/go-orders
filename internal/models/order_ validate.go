@@ -25,10 +25,13 @@ func(oi *OrderItems) Validate() error {
 	return nil
 }
 
-func (or *OrderRequest) Validate() *errors.ErrorResponse {
-	if len(or.Items) == 0 {
-        return OrderErrorParam("items", "items cannot be empty")
+func (or *OrderItem) Validate() *errors.ErrorResponse {
+	if or.ItemID == 0 {
+        return OrderErrorParam("itemID", "itemID cannot be empty")
     }
+	if or.Quantity <= 0 {
+		return OrderErrorParam("Quantity", "Please enter a valid quantity")
+	}
 	
 	return nil
 }

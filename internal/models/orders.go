@@ -25,12 +25,12 @@ type OrderItems struct {
 	Price    string `json:"item_price" db:"item_price"`
 }
 
-type OrderRequest struct {
-	Items []OrderItems `json:"items"`
-}
-
 type OrderCreatedResponse struct {
 	ID int `json:"id"`
+}
+
+type OrderRequest struct {
+	Items []OrderItem `json:"items"`
 }
 
 func NewOrder(userID int, items []OrderItems) *Order {
@@ -41,4 +41,17 @@ func NewOrder(userID int, items []OrderItems) *Order {
 		UpdatedAt: time.Now(),
 		DeletedAt: nil,
 	}
+}
+
+func OrderRequestToOrderItems(request OrderRequest) []OrderItems {
+	var orderItems []OrderItems
+	for _, order := range request.Items {
+		orders := OrderItems{
+			Quantity: order.Quantity,
+			ItemID: order.ItemID,
+		}
+		orderItems = append(orderItems, orders)
+	}
+
+	return orderItems
 }
