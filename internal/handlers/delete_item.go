@@ -10,6 +10,18 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// @Summary Delete item
+// @Description Deletes an item based on the ID provided
+// @Tags Items
+// @Accept json
+// @Produce json
+// @Param itemID path string true "ID of the item to be deleted"
+// @Success 204
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 404 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Router /items/{itemID} [delete]
+// @Security KeyAuth
 func (h *handler) DeleteItem(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("delete item")
 	logger.Info("start delete item")
