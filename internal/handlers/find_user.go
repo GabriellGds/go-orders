@@ -11,6 +11,17 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// @Summary Find user 
+// @Description Retrieves user details based on the user ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param userID path string true "ID of the user to be retrieved"
+// @Success 200 {object} models.UserResponse "User information retrieved successfully"
+// @Failure 400 {object} errors.ErrorResponse "Error: Invalid id"
+// @Failure 404 {object} errors.ErrorResponse "User not found"
+// @Router /users/{userID} [get]
+// @Security KeyAuth
 func (h *handler) FindUser(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("findUser")
 	logger.Info("start findUser")
