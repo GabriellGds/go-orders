@@ -4,11 +4,15 @@ import (
 	"github.com/GabriellGds/go-orders/internal/handlers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	swagger"github.com/swaggo/http-swagger"
+	_ "github.com/GabriellGds/go-orders/docs"
 )
 
 func InitRoutes(mux *chi.Mux, handler handlers.HandlerInterface) {
 
 	mux.Use(middleware.Recoverer)
+	mux.Use(middleware.Logger)
+	mux.Use(handlers.CorsMiddleware)
 	mux.Post("/login", handler.Login)
 	mux.Post("/user", handler.CreateUser)
 
@@ -35,5 +39,7 @@ func InitRoutes(mux *chi.Mux, handler handlers.HandlerInterface) {
 		r.Delete("/{orderID}", handler.DeleteOrder)
 		r.Get("/{orderID}", handler.FindOrder)
 	})
+
+	mux.Get("/docs/*", swagger.Handler(swagger.URL("http://localhost:5000/docs/doc.json")))
 
 }
