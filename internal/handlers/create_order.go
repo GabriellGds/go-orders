@@ -10,6 +10,18 @@ import (
 	"github.com/GabriellGds/go-orders/pkg/response"
 )
 
+// @Summary Create order
+// @Description Create a new order 
+// @Tags Orders
+// @Accept json
+// @Produce json
+// @Param request body models.OrderRequest true "request body"
+// @Success 201 {object} models.OrderCreatedResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 401 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Router /orders/ [post]
+// @Security KeyAuth
 func (h *handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("createOrder")
 	logger.Info("start create order")
@@ -31,24 +43,20 @@ func (h *handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := orderRequest.Validate(); err != nil {
-		logger.Error("error to validate", err)
-		response.SendJSON(w, http.StatusBadRequest, err)
-		return
-	}
-
-	for _, item := range orderRequest.Items {
-		if err := item.Validate(); err != nil {
+	for _, order := range orderRequest.Items {
+		if err := order.Validate(); err != nil {
 			logger.Error("error to validate", err)
-			response.SendJSON(w, http.StatusBadRequest, err)
+			response.SendJSON(w, err.Code, err)
 			return
 		}
 	}
-	order := models.NewOrder(tokenID, orderRequest.Items)
+	orderItems := models.OrderRequestToOrderItems(orderRequest)
+
+	order := models.NewOrder(tokenID, orderItems)
 
 	orderResult, er := h.service.CreateOrderService(ctx, order)
 	if er != nil {
-		response.SendJSON(w, er.Code, err)
+		response.SendJSON(w, er.Code, er)
 		return
 	}
 	orderReponse := models.OrderCreatedResponse{ID: orderResult.ID}
