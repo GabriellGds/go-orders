@@ -8,6 +8,16 @@ import (
 	"github.com/GabriellGds/go-orders/pkg/response"
 )
 
+// @Summary List users
+// @Description Retrieves all users
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.UserResponse "User information retrieved successfully"
+// @Failure 400 {object} errors.ErrorResponse "Error: Invalid id"
+// @Failure 404 {object} errors.ErrorResponse "User not found"
+// @Router /users/ [get]
+// @Security KeyAuth
 func (h handler) ListUsers(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("list user")
 	logger.Info("start handler listUser")
