@@ -1,7 +1,7 @@
 package models
 
 import (
-	"fmt"
+	
 	"net/http"
 
 	"github.com/GabriellGds/go-orders/pkg/errors"
@@ -29,9 +29,13 @@ func (ur *UserLogin) Validate() error {
 	return nil
 }
 
-func (ur *UserRequest) Validate() error {
+func (ur *UserRequest) Validate() *errors.ErrorResponse {
 	if ur.Name == "" && ur.Email == "" && ur.Password == "" {
-		return fmt.Errorf("request body is empty")
+		return &errors.ErrorResponse{
+		Message: "request body is empty",
+		Code: http.StatusBadRequest,
+	}
+
 	}
 	if ur.Name == "" {
 		return UserErrorParam("name", "name (type: string) is required")
@@ -50,7 +54,7 @@ func (ur *UserRequest) Validate() error {
 	return nil
 }
 
-func (ur *UserUpdateRequest) Validate() error {
+func (ur *UserUpdateRequest) Validate() *errors.ErrorResponse {
 	if ur.Name == "" {
 		return UserErrorParam("name", "name (type string) is required")
 	}
