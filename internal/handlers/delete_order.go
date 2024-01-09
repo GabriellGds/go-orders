@@ -11,6 +11,20 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// @Summary Delete order
+// @Description Deletes an order based on the ID provided
+// @Tags Orders
+// @Accept json
+// @Produce json
+// @Param orderID path string true "ID of the order to be deleted"
+// @Success 204
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 401 {object} errors.ErrorResponse
+// @Failure 403 {object} errors.ErrorResponse
+// @Failure 404 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Router /orders/{orderID} [delete]
+// @Security KeyAuth
 func (h *handler) DeleteOrder(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("delete order")
 	logger.Info("start delete order")
