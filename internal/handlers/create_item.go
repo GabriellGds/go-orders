@@ -10,6 +10,18 @@ import (
 	"github.com/GabriellGds/go-orders/pkg/response"
 )
 
+
+// @Summary Create item
+// @Description Create a new item 
+// @Tags Items
+// @Accept json
+// @Produce json
+// @Param request body models.ItemRequest true "request body"
+// @Success 201 {object} models.Item
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Router /items/ [post]
+// @Security KeyAuth
 func (h *handler) CreateItem(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("create item")
 	logger.Info("start create item")
