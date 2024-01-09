@@ -10,7 +10,19 @@ import (
 	"github.com/GabriellGds/go-orders/pkg/response"
 	"github.com/go-chi/chi/v5"
 )
-
+// @Summary Delete user
+// @Description Deletes a user based on the ID provided
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param userID path string true "ID of the user to be deleted"
+// @Success 204
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 403 {object} errors.ErrorResponse
+// @Failure 404 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Router /users/{userID} [delete]
+// @Security KeyAuth
 func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("delete user")
 	logger.Info("start delete user")
