@@ -94,7 +94,7 @@ func (s *service) Login(ctx context.Context, user *models.User) (*models.User, s
 	if err != nil {
 		logger.Error("error to finding email on database", err)
 		return nil, "", &errors.ErrorResponse{
-			Message: "invalid email",
+			Message: "email not found",
 			Code:    http.StatusNotFound,
 		}
 	}
@@ -113,6 +113,7 @@ func (s *service) Login(ctx context.Context, user *models.User) (*models.User, s
 		logger.Error("error to generate token", err)
 		return nil, "", &errors.ErrorResponse{
 			Message: "error to generate token",
+			Code: http.StatusInternalServerError,
 		}
 	}
 
