@@ -10,6 +10,17 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// @Summary Find order 
+// @Description Retrieves item details based on the item ID
+// @Tags Orders
+// @Accept json
+// @Produce json
+// @Param orderID path string true "ID of the order to be retrieved"
+// @Success 200 {object} models.Order "Order information retrieved successfully"
+// @Failure 400 {object} errors.ErrorResponse "Error: Invalid id"
+// @Failure 404 {object} errors.ErrorResponse "Order not found"
+// @Router /orders/{orderID} [get]
+// @Security KeyAuth
 func (h *handler) FindOrder(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("find order")
 	logger.Info("start find order")
