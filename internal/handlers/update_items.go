@@ -12,6 +12,20 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+
+// @Summary Update item
+// @Description Updates item details based on the ID
+// @Tags Items
+// @Accept json
+// @Produce json
+// @Param itemID path string true "ID of the item to be updated"
+// @Param request body models.ItemRequest true "Item information for update"
+// @Success 204
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 404 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Router /items/{itemID} [put]
+// @Security KeyAuth
 func (h *handler) UpdateItem(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("update item")
 	logger.Info("start update item")
