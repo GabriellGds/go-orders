@@ -14,6 +14,17 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+
+// @title Go Orders API
+// @version 1.0
+// @description Orders API with authentication
+// @contact.name Gabriel Gomes
+// @host localhost:5000
+// @BasePath /
+// @license MIT
+// @securityDefinitions.apiKey KeyAuth
+// @in header
+// @name Authorization
 func main() {
 
 	logger := logger.NewLogger("main")

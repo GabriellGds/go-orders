@@ -1,0 +1,586 @@
+basePath: /
+definitions:
+  errors.ErrorResponse:
+    properties:
+      field:
+        type: string
+      message:
+        type: string
+    type: object
+  models.Item:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      updatedAt:
+        type: string
+    type: object
+  models.ItemRequest:
+    properties:
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  models.Order:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/models.OrderItems'
+        type: array
+      updated_at:
+        type: string
+    type: object
+  models.OrderCreatedResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+  models.OrderItem:
+    properties:
+      item_id:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  models.OrderItems:
+    properties:
+      item_id:
+        type: integer
+      item_price:
+        type: string
+      name:
+        type: string
+      order_id:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  models.OrderRequest:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/models.OrderItem'
+        type: array
+    type: object
+  models.UserLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.UserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  models.UserResponse:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.UserUpdateRequest:
+    properties:
+      name:
+        type: string
+    type: object
+host: localhost:5000
+info:
+  contact:
+    name: Gabriel Gomes
+  description: Orders API with authentication
+  title: Go Orders API
+  version: "1.0"
+paths:
+  /items/:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User information retrieved successfully
+          schema:
+            $ref: '#/definitions/models.Item'
+        "400":
+          description: 'Error: Invalid id'
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: List items
+      tags:
+      - Items
+    post:
+      consumes:
+      - application/json
+      description: Create a new item
+      parameters:
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.ItemRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Item'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: Create item
+      tags:
+      - Items
+  /items/{itemID}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an item based on the ID provided
+      parameters:
+      - description: ID of the item to be deleted
+        in: path
+        name: itemID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: Delete item
+      tags:
+      - Items
+    get:
+      consumes:
+      - application/json
+      description: Retrieves item details based on the item ID
+      parameters:
+      - description: ID of the item to be retrieved
+        in: path
+        name: itemID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Item information retrieved successfully
+          schema:
+            $ref: '#/definitions/models.Item'
+        "400":
+          description: 'Error: Invalid id'
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "404":
+          description: Item not found
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: Find user
+      tags:
+      - Items
+    put:
+      consumes:
+      - application/json
+      description: Updates item details based on the ID
+      parameters:
+      - description: ID of the item to be updated
+        in: path
+        name: itemID
+        required: true
+        type: string
+      - description: Item information for update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.ItemRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: Update item
+      tags:
+      - Items
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Allows a user to log in and receive an authentication token.
+      parameters:
+      - description: User login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          headers:
+            Authorization:
+              description: Authentication token
+              type: string
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "403":
+          description: 'Error: Invalid login credentials'
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      summary: User Login
+      tags:
+      - Authentication
+  /orders/:
+    post:
+      consumes:
+      - application/json
+      description: Create a new order
+      parameters:
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.OrderRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.OrderCreatedResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: Create order
+      tags:
+      - Orders
+  /orders/{orderID}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an order based on the ID provided
+      parameters:
+      - description: ID of the order to be deleted
+        in: path
+        name: orderID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: Delete order
+      tags:
+      - Orders
+    get:
+      consumes:
+      - application/json
+      description: Retrieves item details based on the item ID
+      parameters:
+      - description: ID of the order to be retrieved
+        in: path
+        name: orderID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order information retrieved successfully
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: 'Error: Invalid id'
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: Find order
+      tags:
+      - Orders
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      summary: Create user
+      tags:
+      - Users
+  /users/:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User information retrieved successfully
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: 'Error: Invalid id'
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: List users
+      tags:
+      - Users
+  /users/{userID}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a user based on the ID provided
+      parameters:
+      - description: ID of the user to be deleted
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: Delete user
+      tags:
+      - Users
+    get:
+      consumes:
+      - application/json
+      description: Retrieves user details based on the user ID
+      parameters:
+      - description: ID of the user to be retrieved
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User information retrieved successfully
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "400":
+          description: 'Error: Invalid id'
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: Find user
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Updates user details based on the ID
+      parameters:
+      - description: ID of the user to be updated
+        in: path
+        name: userID
+        required: true
+        type: string
+      - description: User information for update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      security:
+      - KeyAuth: []
+      summary: Update user
+      tags:
+      - Users
+securityDefinitions:
+  KeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
