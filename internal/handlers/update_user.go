@@ -12,6 +12,21 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+
+// @Summary Update user
+// @Description Updates user details based on the ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param userID path string true "ID of the user to be updated"
+// @Param request body models.UserUpdateRequest true "User information for update"
+// @Success 204
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 401 {object} errors.ErrorResponse
+// @Failure 403 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Router /users/{userID} [put]
+// @Security KeyAuth
 func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("find user")
 	logger.Info("start find user")
@@ -53,8 +68,7 @@ func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = u.Validate()
-	if err != nil {
+	if err := u.Validate(); err != nil {
 		logger.Error("error to validate", err)
 		response.SendJSON(w, http.StatusBadRequest, err)
 		return
