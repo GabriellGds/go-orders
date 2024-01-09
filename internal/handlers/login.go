@@ -10,6 +10,17 @@ import (
 	"github.com/GabriellGds/go-orders/pkg/response"
 )
 
+
+// @Summary User Login
+// @Description Allows a user to log in and receive an authentication token.
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param request body models.UserLogin true "User login credentials"
+// @Success 200 {object} models.UserResponse "Login successful"
+// @Header 200 {string} Authorization "Authentication token"
+// @Failure 403 {object} errors.ErrorResponse "Error: Invalid login credentials"
+// @Router /login [post]
 func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 	logger := logger.NewLogger("login")
 	logger.Info("start login")
