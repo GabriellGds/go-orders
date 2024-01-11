@@ -1,33 +1,38 @@
-  version: '3.8'
+version: '3.8'
 
-  services:
-    orders:
-      build: .
-      environment:
-        - DB_NAME=orders
-        - DB_HOST=postgres
-        - DB_PORT=5432
-        - DB_USER=postgres
-        - DB_PASSWORD=root
-        - JWT_SECRET=jlksdlkfjlisdaflois5186494357423fiu!@¨&58f87fa34sasdfk
-      depends_on:
-        - postgres
-      ports:
-        - "5000:5000"
-    postgres:
-      image: postgres:14.5
-      container_name: meu-postgres
-      environment:
-        POSTGRES_DB: orders
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: root
-      ports:
-        - "5432:5432"
-      deploy:
-        restart_policy:
-          condition: on-failure
-      volumes:
-        - postgres_data:/var/lib/postgresql/data
+services:
+  orders:
+    build: .
+    environment:
+      - DB_NAME=orders
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=root
+      - JWT_SECRET=jlksdlkfjlisdaflois5186494357423fiu!@¨&58f87fa34sasdfk
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+  postgres:
+    image: postgres:14.5
+    container_name: meu-postgres
+    environment:
+      POSTGRES_DB: orders
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    deploy:
+      restart_policy:
+        condition: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-  volumes:  
-    postgres_data:
+volumes:  
+  postgres_data:
