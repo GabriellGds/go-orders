@@ -31,7 +31,7 @@ type Service interface {
 	ListItems(ctx context.Context) ([]models.Item, *errors.ErrorResponse)
 }
 
-func NewUserService(repository repository.RepositoryInterface) Service {
+func NewService(repository repository.RepositoryInterface) Service {
 	return &service{repository: repository}
 }
 

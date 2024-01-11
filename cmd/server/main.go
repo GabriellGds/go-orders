@@ -37,7 +37,7 @@ func main() {
 	}
 
 	repo := repository.NewRepository(db)
-	service := service.NewUserService(repo)
+	service := service.NewService(repo)
 	handler := handlers.NewHandler(service)
 
 	mux := chi.NewRouter()
