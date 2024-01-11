@@ -10,8 +10,8 @@ import (
 )
 
 func (s *service) CreateUserService(ctx context.Context, user *models.User) (*models.User, *errors.ErrorResponse) {
-	_, err := s.repository.FindUserByEmailRepository(ctx, user.Email)
-	if err == nil {
+	u, _ := s.repository.FindUserByEmailRepository(ctx, user.Email)
+	if u != nil {
 		return nil, &errors.ErrorResponse{
 			Field:   "email",
 			Message: "Email is already registered in another account",
