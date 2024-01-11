@@ -36,7 +36,6 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	logger.Info(tokenID)
 
 	param := chi.URLParam(r, "userID")
 	userID, err := strconv.Atoi(param)
