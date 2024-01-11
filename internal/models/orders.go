@@ -22,7 +22,7 @@ type OrderItems struct {
 	OrderID  int    `json:"order_id" db:"order_id"`
 	Quantity int    `json:"quantity"`
 	Name     string `json:"name" db:"item_name"`
-	Price    string `json:"item_price" db:"item_price"`
+	Price    float64 `json:"item_price" db:"item_price"`
 }
 
 type OrderCreatedResponse struct {
