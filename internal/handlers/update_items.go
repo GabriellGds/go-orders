@@ -57,9 +57,8 @@ func (h *handler) UpdateItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	item := models.NewItem(i.Name, i.Price)
-	error := h.service.UpdateItemSvice(ctx, ID, item)
-	if err != nil {
-		response.SendJSON(w, error.Code, err)
+	if err := h.service.UpdateItemSvice(ctx, ID, item); err != nil {
+		response.SendJSON(w, err.Code, err)
 		return
 	}
 
