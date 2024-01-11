@@ -19,6 +19,7 @@ require (
 	github.com/ory/dockertest/v3 v3.10.0
 	github.com/swaggo/http-swagger v1.3.4
 	github.com/swaggo/swag v1.8.1
+	go.uber.org/mock v0.4.0
 )
 
 require (
