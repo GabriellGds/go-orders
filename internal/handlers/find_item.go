@@ -37,7 +37,7 @@ func (h *handler) FindItem(w http.ResponseWriter, r *http.Request) {
 
 	item, err := h.service.FindItemService(ctx, ID)
 	if err != nil {
-		response.SendJSON(w, http.StatusBadRequest, err)
+		response.SendJSON(w, http.StatusNotFound, err)
 		return
 	}
 
