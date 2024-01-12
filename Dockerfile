@@ -17,8 +17,5 @@ RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
 FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/main .
-ARG PORT
-ENV PORT=$PORT
-EXPOSE $PORT
 
 CMD ["./main"]

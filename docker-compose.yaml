@@ -10,6 +10,9 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=root
       - JWT_SECRET=jlksdlkfjlisdaflois5186494357423fiu!@¨&58f87fa34sasdfk
+    deploy:
+      restart_policy:
+        condition: on-failure
     depends_on:
       - postgres
     ports:
