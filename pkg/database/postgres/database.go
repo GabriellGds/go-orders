@@ -3,6 +3,7 @@ package postgres
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
@@ -23,7 +24,18 @@ func Connect() (*sqlx.DB, error) {
 		"host=%s port=%s dbname=%s user=%s password=%s sslmode=disable",
 		os.Getenv(DB_HOST), os.Getenv(DB_PORT), os.Getenv(DB_NAME), os.Getenv(DB_USER), os.Getenv(DB_PASSWORD))
 
-	db, err := sqlx.Connect("postgres", dsn)
+	var db *sqlx.DB
+	var err error
+
+	for i := 0; i < 10; i++ {
+		db, err = sqlx.Connect("postgres", dsn)
+		if err == nil {
+			break
+		}
+		fmt.Println("Waiting for database")
+		time.Sleep(time.Second * 5)
+	}
+
 	if err != nil {
 		return nil, err
 	}
