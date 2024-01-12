@@ -10,6 +10,7 @@ The project incorporates a Dockerfile to simplify its deployment in containers.
 - [Go-Chi](https://github.com/go-chi/chi): Used for route management.
 - [Swagger](https://swagger.io/): Integrated for API documentation and testing.
 - [DockerTest](https://github.com/ory/dockertest): A Go library utilized to automate the configuration of the testing environment, specifically for conducting integration tests.
+- [SQLX](https://github.com/jmoiron/sqlx): A Go library that simplifies interaction with SQL databases, providing enhanced data binding capabilities.
 - [Mockgen](https://github.com/uber-go/mock): A library in Go used to automate the creation of mocks in unit tests
 - [Postgres](https://www.postgresql.org/): Database management system used in the project.
 - [Docker](https://www.docker.com/products/docker-desktop/): Used to easily run the application, allowing it to run seamlessly across different environments.
@@ -29,14 +30,9 @@ The project incorporates a Dockerfile to simplify its deployment in containers.
 ```
  cd go-orders
 ```
-
- **Build the services in the docker-compose.yml**
-   ```
-   docker-compose build
-   ```
  **Run the services in the docker-compose.yml**
   ```
-  docker-compose up
+  docker-compose up -d
   ```
  **To stop the application, remove containers, and volumes defined in the docker-compose.yml**
    ```
