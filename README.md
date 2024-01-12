@@ -45,7 +45,7 @@ and removal of users, items, and orders. The application will be accessible at h
 
 This API uses token-based authentication. To access protected routes, you need to follow these steps:
 
-1. **Create a User**: In the Swagger UI, look for the createUser endpoint. You should see a ‘Try it out’ button.
+1. **Create a User**: In the Swagger UI, look for the /user endpoint. You should see a ‘Try it out’ button.
 Click on it, and you will be able to enter the required user details. After entering the details, click on ‘Execute’. 
 This will make a POST request to the /user endpoint and create a user.
 
@@ -53,7 +53,7 @@ This will make a POST request to the /user endpoint and create a user.
 and enter your user credentials. Click on ‘Execute’. If the credentials are valid, the API will return an authentication token in the header response.
 
 3. **Use the Token**: To access protected routes, you need to include the authentication token in your requests. 
-In the Swagger UI, you can input your token by clicking on the ‘Authorization’ button. A dialog box will appear where you can enter your token.
+In the Swagger UI, you can input your token by clicking on the ‘Authorize’ button. A dialog box will appear where you can enter your token.
 
 ## Running the Tests
 
